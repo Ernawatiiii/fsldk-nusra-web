@@ -521,7 +521,7 @@
     </div>
 
     <div class="reveal" style="margin-top:44px;">
-      <p class="eyebrow">Pengurus Harian</p>
+      <p class="eyebrow">Badan Pengurus Harian</p>
       <h2 style="font-size:1.4rem; margin-top:8px;">Dewan Pembina & Pengurus Inti.</h2>
       <div class="pengurus-list" id="pengurusList">
         <div><span>Memuat...</span></div>
@@ -605,18 +605,10 @@
     <div class="sec-head reveal">
       <p class="eyebrow">Galeri</p>
       <h2>Momen dari lapangan.</h2>
-      <p>Dokumentasi kegiatan forum — foto lengkap tersedia di Instagram resmi kami.</p>
-    </div>
-    <div class="galeri-grid">
-      <div class="g-tile reveal" style="--tint1:#1F5C56; --tint2:#0D2422;"><span>Rapat Pimpinan Daerah</span></div>
-      <div class="g-tile reveal" style="--tint1:#B9893A; --tint2:#7A5A20;"><span>Musyawarah Daerah</span></div>
-      <div class="g-tile reveal" style="--tint1:#C1502E; --tint2:#7A2F18;"><span>Jambore Aktivis Dakwah Kampus</span></div>
-      <div class="g-tile reveal" style="--tint1:#122E2B; --tint2:#1F5C56;"><span>Aksi Palestina & Kemanusiaan</span></div>
-      <div class="g-tile reveal" style="--tint1:#7A5A20; --tint2:#B9893A;"><span>Pelatihan Manajemen LDK</span></div>
-      <div class="g-tile reveal" style="--tint1:#0D2422; --tint2:#C1502E;"><span>Gerakan Menutup Aurat</span></div>
+      <p>Dokumentasi kegiatan forum — diperbarui langsung oleh admin.</p>
     </div>
 
-    <div class="galeri-grid" id="galeriDinamis" style="margin-top:18px;"></div>
+    <div class="galeri-grid" id="galeriDinamis"></div>
   </div>
 </section>
 
@@ -861,7 +853,10 @@
   async function loadGallery(){
     const el = document.getElementById('galeriDinamis');
     const { data, error } = await sb.from('gallery').select('*').order('created_at', {ascending:false});
-    if(error || !data || data.length === 0){ el.innerHTML = ''; return; }
+    if(error || !data || data.length === 0){
+      el.innerHTML = '<p class="empty-note">Belum ada foto. Admin bisa menambahkan lewat Mode Admin.</p>';
+      return;
+    }
     el.innerHTML = data.map(g => `
       <div class="g-tile dyn reveal in">
         <img src="${escapeHtml(g.image_url)}" alt="${escapeHtml(g.caption||'')}" loading="lazy">
