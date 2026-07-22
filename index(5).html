@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSLDK Nusa Tenggara — Forum Silaturahmi Lembaga Dakwah Kampus</title>
+<link rel="icon" type="image/png" href="https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/cropped-fsldk-profil-03.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#122E2B;
+    --teal:#1F5C56;
+    --teal-deep:#0D2422;
+    --paper:#F4EDDC;
+    --paper-warm:#EFE4CC;
+    --card:#FBF6EA;
+    --gold:#B9893A;
+    --gold-soft:#D8B876;
+    --coral:#C1502E;
+    --ink-text:#1B2320;
+    --line: rgba(18,46,43,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink-text);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Amiri', serif;
+    margin:0;
+    color:var(--ink);
+    font-weight:700;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--coral);
+    font-weight:500;
+  }
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 24px;}
+  section{padding:96px 0;}
+  @media(max-width:720px){ section{padding:64px 0;} }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  @media(prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(244,237,220,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:1140px; margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Amiri',serif; font-weight:700; font-size:1.15rem; color:var(--ink); text-decoration:none;}
+  .brand .mark{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--teal); position:relative; flex:none;
+  }
+  .brand .mark svg{position:absolute; inset:0;}
+  .navlinks{display:flex; gap:32px; list-style:none; margin:0; padding:0;}
+  .navlinks a{
+    text-decoration:none; font-size:.92rem; font-weight:600; color:var(--ink);
+    position:relative; padding-bottom:4px;
+  }
+  .navlinks a::after{
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:0;
+    background:var(--coral); transition:width .25s ease;
+  }
+  .navlinks a:hover::after{width:100%;}
+  .nav-ig{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink); color:var(--paper)!important;
+    padding:9px 18px; border-radius:100px; font-size:.85rem; font-weight:600;
+    text-decoration:none; white-space:nowrap;
+  }
+  .burger{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .burger span{display:block; width:24px; height:2px; background:var(--ink); margin:5px 0;}
+  @media(max-width:860px){
+    .navlinks{
+      position:fixed; top:64px; left:0; right:0; background:var(--paper);
+      flex-direction:column; gap:0; border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+    }
+    .navlinks.open{max-height:400px;}
+    .navlinks li{width:100%;}
+    .navlinks a{display:block; padding:16px 24px; border-top:1px solid var(--line);}
+    .nav-ig{display:none;}
+    .burger{display:block;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:var(--teal-deep);
+    padding:180px 0 110px;
+    color:var(--paper);
+  }
+  .hero .wrap{position:relative; z-index:2;}
+  .hero-net{position:absolute; inset:0; z-index:1; opacity:.55;}
+  .hero .eyebrow{color:var(--gold-soft);}
+  .hero h1{
+    color:var(--paper);
+    font-size:clamp(2.3rem, 5.4vw, 4rem);
+    line-height:1.12;
+    max-width:820px;
+    margin-top:18px;
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--gold-soft);
+  }
+  .hero p.lead{
+    max-width:560px; margin-top:24px; font-size:1.08rem; line-height:1.65;
+    color:rgba(244,237,220,0.82);
+  }
+  .hero-ctas{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 26px; border-radius:100px; text-decoration:none;
+    font-weight:600; font-size:.94rem; border:1px solid transparent;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--coral); color:#fff;}
+  .btn-ghost{border-color:rgba(244,237,220,0.35); color:var(--paper);}
+  .hero-stats{
+    margin-top:64px; display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+    border-top:1px solid rgba(244,237,220,0.18); padding-top:32px;
+  }
+  .hero-stats div b{
+    display:block; font-family:'Amiri',serif; font-size:2rem; color:var(--gold-soft);
+  }
+  .hero-stats div span{font-size:.8rem; color:rgba(244,237,220,0.7);}
+  @media(max-width:720px){ .hero-stats{grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- section heading pattern ---------- */
+  .sec-head{max-width:640px; margin-bottom:56px;}
+  .sec-head h2{font-size:clamp(1.7rem,3.6vw,2.4rem); margin-top:10px;}
+  .sec-head p{margin-top:14px; line-height:1.65; color:#3d453f;}
+
+  /* ---------- tentang ---------- */
+  .tentang-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:start;}
+  @media(max-width:860px){ .tentang-grid{grid-template-columns:1fr;} }
+  .visi-card{
+    background:var(--ink); color:var(--paper);
+    border-radius:18px; padding:40px; position:relative;
+  }
+  .visi-card .eyebrow{color:var(--gold-soft);}
+  .visi-card blockquote{
+    font-family:'Amiri',serif; font-style:italic; font-size:1.4rem; line-height:1.55;
+    margin:18px 0 0; color:var(--paper);
+  }
+  .misi-list{list-style:none; margin:0; padding:0; counter-reset:misi;}
+  .misi-list li{
+    counter-increment:misi;
+    display:grid; grid-template-columns:40px 1fr; gap:16px;
+    padding:18px 0; border-top:1px solid var(--line);
+  }
+  .misi-list li:first-child{border-top:none;}
+  .misi-list li::before{
+    content:counter(misi,decimal-leading-zero);
+    font-family:'IBM Plex Mono',monospace; color:var(--coral); font-weight:500; font-size:.95rem; padding-top:2px;
+  }
+  .misi-list p{margin:0; line-height:1.6; font-size:.97rem;}
+  .tujuan-box{
+    margin-top:28px; background:var(--card); border-radius:18px; padding:32px;
+    border:1px solid var(--line);
+  }
+  .tujuan-box p{line-height:1.7; margin:12px 0 0; font-size:.97rem; color:#3d453f;}
+
+  /* struktur mini */
+  .struktur{margin-top:60px;}
+  .struktur-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+  }
+  @media(max-width:860px){ .struktur-grid{grid-template-columns:repeat(2,1fr);} }
+  .struktur-grid > div{background:var(--card); padding:26px 22px;}
+  .struktur-grid h4{font-size:.95rem; color:var(--teal);}
+  .struktur-grid p{margin:8px 0 0; font-size:.86rem; line-height:1.55; color:#4a534d;}
+
+  /* ---------- program ---------- */
+  .program{background:var(--paper-warm);}
+  .program-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media(max-width:900px){ .program-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:620px){ .program-grid{grid-template-columns:1fr;} }
+  .prog-card{
+    background:var(--card); border-radius:18px; padding:30px;
+    border:1px solid var(--line); transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .prog-card:hover{transform:translateY(-5px); box-shadow:0 16px 40px rgba(18,46,43,0.12);}
+  .prog-icon{
+    width:48px; height:48px; border-radius:12px; background:var(--teal);
+    display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+  }
+  .prog-card h3{font-size:1.15rem; margin-top:0;}
+  .prog-card p{margin:10px 0 0; font-size:.9rem; line-height:1.6; color:#4a534d;}
+
+  /* ---------- jaringan LDK ---------- */
+  .jaringan-wrap{display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:center;}
+  @media(max-width:900px){ .jaringan-wrap{grid-template-columns:1fr;} }
+  .ldk-list{list-style:none; margin:0; padding:0; display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
+  .ldk-list li{background:var(--card); padding:0;}
+  .ldk-list li a, .ldk-list li .noig{
+    display:flex; align-items:center; gap:14px; padding:12px 20px;
+    text-decoration:none; color:inherit;
+  }
+  .ldk-list li a{transition:background .2s ease;}
+  .ldk-list li a:hover{background:#f2ead4;}
+  .ldk-list li a:hover b{color:var(--coral);}
+  .ldk-list li b{font-family:'Amiri',serif; font-size:1rem; color:var(--ink); display:block; transition:color .2s ease;}
+  .ldk-list li span.kampus{font-size:.78rem; color:var(--coral); font-family:'IBM Plex Mono',monospace; white-space:nowrap; margin-left:auto;}
+  .ldk-list li .ig-ic{flex:none; opacity:.55;}
+  .ldk-list li a:hover .ig-ic{opacity:1;}
+  .ldk-logo{width:38px; height:38px; border-radius:8px; object-fit:contain; background:#fff; padding:4px; border:1px solid var(--line); flex:none;}
+
+  /* ---------- galeri ---------- */
+  .galeri-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media(max-width:860px){ .galeri-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:520px){ .galeri-grid{grid-template-columns:1fr;} }
+  .g-tile{
+    aspect-ratio:4/3; border-radius:14px; position:relative; overflow:hidden;
+    display:flex; align-items:flex-end; padding:18px; color:var(--paper);
+  }
+  .g-tile span{position:relative; z-index:2; font-size:.88rem; font-weight:600; line-height:1.4;}
+  .g-tile::before{content:''; position:absolute; inset:0; background:linear-gradient(160deg, var(--tint1), var(--tint2));}
+  .g-tile::after{content:''; position:absolute; inset:0; background:linear-gradient(0deg, rgba(13,36,34,.65), rgba(13,36,34,.05));}
+
+  /* ---------- harapan ---------- */
+  .harapan{background:var(--ink); color:var(--paper);}
+  .harapan .sec-head p{color:rgba(244,237,220,0.75);}
+  .harapan .eyebrow{color:var(--gold-soft);}
+  .harapan-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:rgba(244,237,220,0.16); border-radius:16px; overflow:hidden;}
+  @media(max-width:700px){ .harapan-grid{grid-template-columns:1fr;} }
+  .harapan-grid div{background:var(--ink); padding:28px; font-family:'Amiri',serif; font-size:1.08rem; line-height:1.5; font-style:italic;}
+
+  /* ---------- kontak ---------- */
+  .kontak-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
+  @media(max-width:860px){ .kontak-grid{grid-template-columns:1fr;} }
+  .kontak-list{list-style:none; margin:28px 0 0; padding:0; display:grid; gap:14px;}
+  .kontak-list a{
+    display:flex; align-items:center; gap:14px; text-decoration:none;
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+    font-weight:600; color:var(--ink); transition:border-color .2s ease;
+  }
+  .kontak-list a:hover{border-color:var(--coral);}
+  .kontak-list .ic{
+    width:38px; height:38px; border-radius:10px; background:var(--teal);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .kontak-list small{display:block; font-weight:400; font-size:.78rem; color:#5a6259; margin-top:2px;}
+
+  form.formcard{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:32px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:.82rem; font-weight:600; margin-bottom:8px; color:var(--ink);}
+  .field input, .field textarea{
+    width:100%; padding:13px 16px; border-radius:10px; border:1px solid var(--line);
+    background:#fff; font-family:inherit; font-size:.92rem; color:var(--ink-text);
+  }
+  .field textarea{resize:vertical; min-height:100px;}
+  .field input:focus, .field textarea:focus{outline:2px solid var(--teal); outline-offset:1px;}
+  .formcard button{
+    width:100%; padding:14px; border:none; border-radius:100px; background:var(--coral); color:#fff;
+    font-weight:700; font-size:.95rem; cursor:pointer; transition:transform .2s ease;
+  }
+  .formcard button:hover{transform:translateY(-2px);}
+  .form-note{font-size:.78rem; color:#5a6259; margin-top:12px; text-align:center;}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--teal-deep); color:rgba(244,237,220,0.75); padding:48px 0 28px;}
+  .foot-top{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-bottom:32px; border-bottom:1px solid rgba(244,237,220,0.14);}
+  .foot-brand{font-family:'Amiri',serif; color:var(--paper); font-size:1.2rem; font-weight:700;}
+  .foot-links{display:flex; gap:26px; list-style:none; margin:0; padding:0; flex-wrap:wrap;}
+  .foot-links a{text-decoration:none; font-size:.88rem; color:rgba(244,237,220,0.75);}
+  .foot-bottom{padding-top:22px; font-size:.78rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  :focus-visible{outline:2px solid var(--coral); outline-offset:2px;}
+
+  /* ---------- berita ---------- */
+  .berita{background:var(--paper-warm);}
+  .berita-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media(max-width:900px){ .berita-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:620px){ .berita-grid{grid-template-columns:1fr;} }
+  .berita-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:26px; position:relative;}
+  .berita-card time{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--coral); letter-spacing:.05em;}
+  .berita-card h3{font-size:1.05rem; margin-top:10px;}
+  .berita-card p{margin:10px 0 0; font-size:.9rem; line-height:1.6; color:#4a534d;}
+  .empty-note{font-size:.9rem; color:#6b746e; font-style:italic; grid-column:1/-1;}
+
+  /* ---------- komisi clickable ---------- */
+  .struktur-grid button.komisi-btn{
+    all:unset; cursor:pointer; display:block; width:100%; box-sizing:border-box;
+    background:var(--card); padding:26px 22px; transition:background .2s ease;
+  }
+  .struktur-grid button.komisi-btn:hover{background:#f2ead4;}
+  .komisi-btn .see-more{display:block; margin-top:10px; font-size:.76rem; font-weight:700; color:var(--teal);}
+
+  .pengurus-list{margin-top:28px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
+  @media(max-width:860px){ .pengurus-list{grid-template-columns:1fr;} }
+  .pengurus-list div{background:var(--card); padding:20px 22px;}
+  .pengurus-list b{display:block; font-family:'Amiri',serif; font-size:1rem; color:var(--ink);}
+  .pengurus-list span{font-size:.78rem; color:var(--coral); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- modal umum ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(13,36,34,0.6); z-index:1000;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--paper); border-radius:20px; max-width:560px; width:100%;
+    max-height:85vh; overflow-y:auto; padding:34px; position:relative;
+  }
+  .modal-box.wide{max-width:760px;}
+  .modal-close{
+    position:absolute; top:18px; right:18px; background:var(--ink); color:var(--paper);
+    width:32px; height:32px; border-radius:50%; border:none; cursor:pointer; font-size:1rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .modal-box h3{font-size:1.3rem; padding-right:40px;}
+  .modal-box .eyebrow{margin-bottom:4px; display:block;}
+  #komisiMembers{list-style:none; margin:22px 0 0; padding:0; display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  #komisiMembers li{background:var(--card); padding:14px 18px; font-weight:600;}
+
+  /* ---------- admin fab & panel ---------- */
+  .admin-fab{
+    position:fixed; bottom:24px; right:24px; z-index:900;
+    background:var(--ink); color:var(--paper); border:none; border-radius:100px;
+    padding:14px 22px; font-weight:700; font-size:.85rem; cursor:pointer;
+    display:flex; align-items:center; gap:8px; box-shadow:0 10px 30px rgba(13,36,34,0.35);
+  }
+  .tabs{display:flex; gap:6px; margin:22px 0 20px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:0;}
+  .tab-btn{
+    all:unset; cursor:pointer; padding:9px 16px; font-size:.82rem; font-weight:700;
+    border-radius:10px 10px 0 0; color:#5a6259;
+  }
+  .tab-btn.active{background:var(--card); color:var(--ink); border:1px solid var(--line); border-bottom:none;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .admin-item-list{list-style:none; margin:16px 0 0; padding:0; display:grid; gap:10px;}
+  .admin-item-list li{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:.88rem;
+  }
+  .admin-item-list li .txt{line-height:1.4;}
+  .admin-item-list li .txt small{display:block; color:#6b746e; font-size:.76rem;}
+  .del-btn{
+    all:unset; cursor:pointer; color:var(--coral); font-weight:700; font-size:.78rem;
+    border:1px solid var(--coral); border-radius:100px; padding:6px 12px; flex:none;
+  }
+  .del-btn:hover{background:var(--coral); color:#fff;}
+  .admin-msg{font-size:.82rem; margin-top:10px; display:none;}
+  .admin-msg.show{display:block;}
+  .admin-msg.ok{color:var(--teal);}
+  .admin-msg.err{color:var(--coral);}
+  .logout-row{display:flex; justify-content:space-between; align-items:center; margin-top:-6px; margin-bottom:6px;}
+  .logout-link{all:unset; cursor:pointer; font-size:.78rem; color:var(--coral); font-weight:700;}
+  .g-tile.dyn{background:#eee;}
+  .g-tile.dyn img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a class="brand" href="#beranda">
+      <span class="mark">
+        <img src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/logo-utama.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/cropped-fsldk-profil-03.png'" alt="Logo FSLDK Nusa Tenggara" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+      </span>
+      FSLDK Nusa Tenggara
+    </a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#beranda">Beranda</a></li>
+      <li><a href="#berita">Berita</a></li>
+      <li><a href="#tentang">Tentang Kami</a></li>
+      <li><a href="#program">Program</a></li>
+      <li><a href="#galeri">Galeri</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+    <a class="nav-ig" href="https://www.instagram.com/fsldknusatenggara/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Ikuti Kami
+    </a>
+    <button class="burger" id="burger" aria-label="Buka menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="beranda">
+  <svg class="hero-net" viewBox="0 0 1140 620" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <!-- abstrak pulau Lombok & Sumbawa -->
+    <ellipse cx="330" cy="330" rx="150" ry="130" fill="none" stroke="#D8B876" stroke-width="1" opacity="0.5"/>
+    <path d="M560 300 Q 720 240 900 310 Q 980 340 1010 290" fill="none" stroke="#D8B876" stroke-width="1" opacity="0.5"/>
+    <!-- simpul 12 lembaga -->
+    <g stroke="#F4EDDC" stroke-width="0.7" opacity="0.5">
+      <line x1="330" y1="330" x2="230" y2="220"/>
+      <line x1="330" y1="330" x2="410" y2="200"/>
+      <line x1="330" y1="330" x2="250" y2="420"/>
+      <line x1="330" y1="330" x2="430" y2="440"/>
+      <line x1="330" y1="330" x2="560" y2="300"/>
+      <line x1="560" y1="300" x2="650" y2="200"/>
+      <line x1="560" y1="300" x2="700" y2="400"/>
+      <line x1="560" y1="300" x2="800" y2="250"/>
+      <line x1="900" y1="310" x2="850" y2="420"/>
+      <line x1="900" y1="310" x2="1000" y2="230"/>
+      <line x1="900" y1="310" x2="1010" y2="290"/>
+      <line x1="700" y1="400" x2="800" y2="470"/>
+    </g>
+    <g fill="#D8B876">
+      <circle cx="330" cy="330" r="4"/>
+      <circle cx="230" cy="220" r="3"/>
+      <circle cx="410" cy="200" r="3"/>
+      <circle cx="250" cy="420" r="3"/>
+      <circle cx="430" cy="440" r="3"/>
+      <circle cx="560" cy="300" r="4"/>
+      <circle cx="650" cy="200" r="3"/>
+      <circle cx="700" cy="400" r="3"/>
+      <circle cx="800" cy="250" r="3"/>
+      <circle cx="900" cy="310" r="4"/>
+      <circle cx="850" cy="420" r="3"/>
+      <circle cx="1000" cy="230" r="3"/>
+      <circle cx="1010" cy="290" r="3"/>
+      <circle cx="800" cy="470" r="3"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Forum Silaturahmi Lembaga Dakwah Kampus — Nusa Tenggara</p>
+    <h1 class="reveal in">Merajut <em>silaturahmi</em>,<br>menguatkan dakwah kampus se-Nusa Tenggara.</h1>
+    <p class="lead reveal in">FSLDK Nusa Tenggara menyatukan 16 Lembaga Dakwah Kampus dari Lombok hingga Sumbawa dalam satu forum kolaborasi — membina, mengupgrade potensi, dan mencetak pemimpin masa depan menuju Indonesia madani.</p>
+    <div class="hero-ctas reveal in">
+      <a class="btn btn-primary" href="#kontak">Hubungi Kami</a>
+      <a class="btn btn-ghost" href="https://www.instagram.com/fsldknusatenggara/" target="_blank" rel="noopener">Lihat Instagram</a>
+    </div>
+    <div class="hero-stats reveal in">
+      <div><b>16</b><span>LDK Anggota</span></div>
+      <div><b>4</b><span>Komisi Kerja</span></div>
+      <div><b>2</b><span>Badan Semi Otonom</span></div>
+      <div><b>2th</b><span>Masa Kepengurusan</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BERITA ================= -->
+<section class="berita" id="berita">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Informasi Terbaru</p>
+      <h2>Kabar dari forum.</h2>
+      <p>Pengumuman, agenda, dan perkembangan terbaru seputar FSLDK Nusa Tenggara — diperbarui langsung oleh admin.</p>
+    </div>
+    <div class="berita-grid" id="beritaGrid">
+      <p class="empty-note">Memuat berita...</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TENTANG ================= -->
+<section id="tentang">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Tentang Kami</p>
+      <h2>Visi, misi, dan arah gerak forum.</h2>
+      <p>FSLDK Nusa Tenggara adalah wadah kolaborasi Lembaga Dakwah Kampus se-Nusa Tenggara untuk mempersatukan potensi dakwah, membina karakter, dan melahirkan pemimpin masa depan.</p>
+    </div>
+
+    <div class="tentang-grid">
+      <div class="reveal">
+        <div class="visi-card">
+          <p class="eyebrow">Visi</p>
+          <blockquote>"Terwujudnya sinergi antar Lembaga Dakwah Kampus se-Indonesia menuju Indonesia madani."</blockquote>
+        </div>
+        <div class="tujuan-box">
+          <p class="eyebrow" style="color:var(--coral)">Tujuan FSLDK Indonesia</p>
+          <p>Sebagai wadah dan forum untuk mempersatukan, mengkolaborasikan, serta mengoptimalkan seluruh potensi Lembaga Dakwah Kampus dalam mencetak pemimpin-pemimpin masa depan, melestarikan cita-cita dakwah kampus, serta memberikan manfaat nyata bagi anggota, Indonesia, dan masyarakat dunia.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <p class="eyebrow">Misi</p>
+        <ol class="misi-list">
+          <li><p>Mengoptimalkan pembinaan anggota berlandaskan Al-Qur'an dan As-Sunnah serta menanamkan nilai-nilai kebangsaan.</p></li>
+          <li><p>Menjadi wadah untuk mengupgrade potensi anggota LDK se-Indonesia.</p></li>
+          <li><p>Membangun profesionalitas kerja FSLDK Indonesia.</p></li>
+          <li><p>Menjadi opinion leader dalam menanggapi dan mengelola isu nasional dan internasional.</p></li>
+          <li><p>Mengokohkan karakter, pemahaman, dan nilai Islam dalam tatanan kehidupan bangsa.</p></li>
+          <li><p>Mengaktifkan kolaborasi untuk melejitkan eksistensi LDK se-Indonesia.</p></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="struktur reveal">
+      <p class="eyebrow">Struktur Kepengurusan</p>
+      <h2 style="font-size:1.5rem; margin-top:8px;">Empat komisi, dua badan semi otonom.</h2>
+      <div class="struktur-grid" style="margin-top:28px;">
+        <div><button class="komisi-btn" data-komisi="A" data-label="Komisi A — Isu Keumatan"><h4>Komisi A</h4><p>Isu Keumatan</p><span class="see-more">Lihat anggota →</span></button></div>
+        <div><button class="komisi-btn" data-komisi="B" data-label="Komisi B — Kaderisasi & Kelembagaan"><h4>Komisi B</h4><p>Kaderisasi & Kelembagaan</p><span class="see-more">Lihat anggota →</span></button></div>
+        <div><button class="komisi-btn" data-komisi="C" data-label="Komisi C — Kemuslimahan"><h4>Komisi C</h4><p>Kemuslimahan</p><span class="see-more">Lihat anggota →</span></button></div>
+        <div><button class="komisi-btn" data-komisi="D" data-label="Komisi D — Humas & Media"><h4>Komisi D</h4><p>Humas & Media</p><span class="see-more">Lihat anggota →</span></button></div>
+        <div><button class="komisi-btn" data-komisi="BAROKAH" data-label="Barokah Mart — Fundrising"><h4>Barokah Mart</h4><p>Badan semi otonom — Fundrising</p><span class="see-more">Lihat anggota →</span></button></div>
+        <div><button class="komisi-btn" data-komisi="PEDULI" data-label="FSLDK Peduli — Kepedulian"><h4>FSLDK Peduli</h4><p>Badan semi otonom — Kepedulian</p><span class="see-more">Lihat anggota →</span></button></div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:44px;">
+      <p class="eyebrow">Badan Pengurus Harian</p>
+      <h2 style="font-size:1.4rem; margin-top:8px;">Dewan Pembina & Pengurus Inti.</h2>
+      <div class="pengurus-list" id="pengurusList">
+        <div><span>Memuat...</span></div>
+      </div>
+    </div>
+
+    <div class="jaringan-wrap" style="margin-top:80px;">
+      <div class="reveal">
+        <p class="eyebrow">Jaringan Kami</p>
+        <h2 style="font-size:1.6rem; margin-top:8px;">16 LDK yang tersambung dalam satu forum.</h2>
+        <p style="margin-top:14px; line-height:1.65; color:#3d453f;">Dari Universitas Mataram hingga kampus-kampus di Sumbawa dan Bima, setiap simpul di jaringan ini adalah lembaga dakwah kampus yang aktif bergerak bersama FSLDK Nusa Tenggara. Klik nama LDK buat langsung mampir ke Instagram mereka.</p>
+      </div>
+      <ul class="ldk-list reveal">
+        <li><a href="https://www.instagram.com/ldkunram/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-unram.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-bhi-unram.png'" alt="Logo LDK Baabul Hikmah"><b>LDK Baabul Hikmah</b><span class="kampus">UNRAM</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/kalam_uts/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-uts.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-kalam-uts.png'" alt="Logo LDK KALAM"><b>LDK KALAM</b><span class="kampus">UTS</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk.kamilbumigora/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-ubg.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-kamil-ubg.png'" alt="Logo LDK KAMIL"><b>LDK KAMIL</b><span class="kampus">UBG</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk_abwabarrahmah/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-undova.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-abwab-ar-rahmah.png'" alt="Logo LDK Abwab Ar-Rahmah"><b>LDK Abwab Ar-Rahmah</b><span class="kampus">UNDOVA</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk_annuur_undikma/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-undikma.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-an-nuur-ikip.png'" alt="Logo LDK An-Nuur"><b>LDK An-Nuur</b><span class="kampus">UNDIKMA</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldmi_alfajr/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-uinmataram.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldmi-al-fajr-uin.png'" alt="Logo LDMI Al-Fajr"><b>LDMI Al-Fajr</b><span class="kampus">UIN Mataram</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/asy_syifainkesyarsi/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-yarsi.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-as-syifa-stikes-yarsi.png'" alt="Logo LDK As-Syifa"><b>LDK As-Syifa</b><span class="kampus">Stikes Yarsi Mataram</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/assalaampoltekkesmataram/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-poltekkes.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/06/ukmi-as-salam-poltekkes.png'" alt="Logo UKMI As-Salam"><b>UKMI As-Salam</b><span class="kampus">Poltekkes Mataram</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldm.sm.unsa/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-unsa.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-sm-unsa.png'" alt="Logo LDM Shirathal Mustaqim"><b>LDM Shirathal Mustaqim</b><span class="kampus">Universitas Samawa</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk_utm/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-utm.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-utm.png'" alt="Logo LDK UTM"><b>LDK UTM</b><span class="kampus">UTM</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk.raudathulilmi/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-stainw-raudhatul.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/ldk-stai-nw-samawa.png'" alt="Logo LDK Raudhatul Ilmi"><b>LDK Raudhatul 'Ilmi</b><span class="kampus">STAI NW Samawa</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk.perisai_stais/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-stainw-perisai.png" onerror="this.onerror=null;this.src='https://fsldknusatenggara.wordpress.com/wp-content/uploads/2024/03/main-logo-ldk-perisai.png'" alt="Logo LDK PERISAI"><b>LDK PERISAI</b><span class="kampus">STAI Sumbawa</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldmialhuda06/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-alhuda.png" alt="Logo LDMI Al-Huda"><b>LDMI Al-Huda</b><span class="kampus">IAI Qamarul Huda Bagu</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldkasy.syamil/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-asysyamil.png" alt="Logo LDK Asy Syamil"><b>LDK Asy Syamil</b><span class="kampus">ITL</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk_almuhajirin.tsb/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-almuhajirin.png" alt="Logo LDK Al-Muhajirin"><b>LDK Al-Muhajirin</b><span class="kampus">STKIP Taman Siswa Bima</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a href="https://www.instagram.com/ldk.baitullatif.unswa/" target="_blank" rel="noopener"><img class="ldk-logo" src="https://jmuynzlglewquisdvlwi.supabase.co/storage/v1/object/public/assets/ldk-baitullatif.png" alt="Logo LDK Baitul Latif"><b>LDK Baitul Latif</b><span class="kampus">UNSWA</span><svg class="ig-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C1502E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAM ================= -->
+<section class="program" id="program">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Program Kerja</p>
+      <h2>Kegiatan yang menghidupkan forum.</h2>
+      <p>Rangkaian program yang menjaga koordinasi antar-LDK, membina kompetensi anggota, dan menghadirkan dakwah di ruang publik.</p>
+    </div>
+    <div class="program-grid">
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
+        <h3>Rapat Pimpinan Daerah</h3>
+        <p>Forum koordinasi rutin para pimpinan LDK se-Nusa Tenggara untuk menyelaraskan langkah dan program kerja forum.</p>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Musyawarah Daerah</h3>
+        <p>Agenda tertinggi forum untuk menetapkan arah kebijakan dan memilih kepengurusan FSLDK Nusa Tenggara.</p>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M12 2 L2 8 L12 14 L22 8 Z"/><path d="M2 14 L12 20 L22 14"/></svg></div>
+        <h3>Jambore Aktivis Dakwah Kampus</h3>
+        <p>Perhelatan besar yang mempertemukan aktivis dakwah kampus se-Nusa Tenggara dalam suasana kekeluargaan.</p>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
+        <h3>Aksi Palestina & Kemanusiaan</h3>
+        <p>Gerakan solidaritas dan penggalangan kepedulian untuk isu kemanusiaan global, termasuk Palestina.</p>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg></div>
+        <h3>Pelatihan Manajemen LDK</h3>
+        <p>Pembekalan kemampuan manajerial bagi pengurus LDK agar lembaga dakwah berjalan profesional.</p>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div>
+        <h3>Gerakan Menutup Aurat</h3>
+        <p>Kampanye kesadaran berpakaian sesuai syariat di lingkungan kampus se-Nusa Tenggara.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALERI ================= -->
+<section id="galeri">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Galeri</p>
+      <h2>Momen dari lapangan.</h2>
+      <p>Dokumentasi kegiatan forum — diperbarui langsung oleh admin.</p>
+    </div>
+
+    <div class="galeri-grid" id="galeriDinamis"></div>
+  </div>
+</section>
+
+<!-- ================= HARAPAN ================= -->
+<section class="harapan">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Harapan Kami</p>
+      <h2 style="color:var(--paper);">Yang ingin kami tumbuhkan bersama.</h2>
+    </div>
+    <div class="harapan-grid reveal">
+      <div>"Terciptanya semangat dakwah yang berkelanjutan di setiap Lembaga Dakwah Kampus."</div>
+      <div>"Terciptanya potensi anggota pada masing-masing bidang."</div>
+      <div>"Terciptanya pemimpin-pemimpin masa depan dalam membangun Indonesia madani."</div>
+      <div>"Terbentuknya lingkungan kebaikan sebagai wadah pembinaan diri setiap mahasiswa dan pemuda muslim."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KONTAK ================= -->
+<section id="kontak">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Kontak</p>
+      <h2>Mari terhubung dengan kami.</h2>
+      <p>Ada pertanyaan, kerja sama, atau ingin bergabung? Sampaikan lewat kanal di bawah, atau isi formulir singkat ini.</p>
+    </div>
+    <div class="kontak-grid">
+      <ul class="kontak-list reveal">
+        <li>
+          <a href="mailto:fsldknusatenggara@gmail.com">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>
+            <span>fsldknusatenggara@gmail.com<small>Email resmi</small></span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.instagram.com/fsldknusatenggara/" target="_blank" rel="noopener">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></span>
+            <span>@fsldknusatenggara<small>Instagram</small></span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.facebook.com/profile.php?id=100080490934529" target="_blank" rel="noopener">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EDDC" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></span>
+            <span>FSLDK Nusa Tenggara<small>Facebook</small></span>
+          </a>
+        </li>
+      </ul>
+
+      <form class="formcard reveal" onsubmit="event.preventDefault(); document.getElementById('formMsg').style.display='block'; this.reset();">
+        <div class="field">
+          <label for="nama">Nama</label>
+          <input id="nama" type="text" placeholder="Nama lengkap" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="nama@email.com" required>
+        </div>
+        <div class="field">
+          <label for="pesan">Pesan</label>
+          <textarea id="pesan" placeholder="Tulis pesan, pertanyaan, atau maksud kerja sama kamu..." required></textarea>
+        </div>
+        <button type="submit">Kirim Pesan</button>
+        <p class="form-note" id="formMsg" style="display:none; color:var(--teal); font-weight:600;">Terkirim! Tim kami akan membalas ke email kamu.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">FSLDK Nusa Tenggara</div>
+      <ul class="foot-links">
+        <li><a href="#beranda">Beranda</a></li>
+        <li><a href="#berita">Berita</a></li>
+        <li><a href="#tentang">Tentang Kami</a></li>
+        <li><a href="#program">Program</a></li>
+        <li><a href="#galeri">Galeri</a></li>
+        <li><a href="#kontak">Kontak</a></li>
+      </ul>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Forum Silaturahmi Lembaga Dakwah Kampus Nusa Tenggara.</span>
+      <span>Menuju Indonesia Madani.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= MODAL: ANGGOTA KOMISI ================= -->
+<div class="modal-overlay" id="komisiModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('komisiModal')" aria-label="Tutup">✕</button>
+    <span class="eyebrow">Anggota</span>
+    <h3 id="komisiTitle">Komisi</h3>
+    <ul id="komisiMembers"></ul>
+  </div>
+</div>
+
+<!-- ================= ADMIN FAB ================= -->
+<button class="admin-fab" id="adminFab">⚙ Mode Admin</button>
+
+<!-- ================= MODAL: ADMIN ================= -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal('adminModal')" aria-label="Tutup">✕</button>
+
+    <!-- form login -->
+    <div id="loginView">
+      <span class="eyebrow">Dashboard Admin</span>
+      <h3>Masuk sebagai admin</h3>
+      <div class="field" style="margin-top:20px;">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" placeholder="email@kamu.com">
+      </div>
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input id="loginPass" type="password" placeholder="Password">
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center; border:none; cursor:pointer;" onclick="doLogin()">Masuk</button>
+      <p class="admin-msg" id="loginMsg"></p>
+    </div>
+
+    <!-- panel admin -->
+    <div id="panelView" style="display:none;">
+      <div class="logout-row">
+        <div>
+          <span class="eyebrow">Dashboard Admin</span>
+          <h3 style="margin-top:4px;">Kelola konten web</h3>
+        </div>
+        <button class="logout-link" onclick="doLogout()">Keluar</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tabBerita">Berita</button>
+        <button class="tab-btn" data-tab="tabGaleri">Galeri</button>
+        <button class="tab-btn" data-tab="tabPengurus">Pengurus</button>
+        <button class="tab-btn" data-tab="tabKomisi">Komisi & BSO</button>
+      </div>
+
+      <!-- Tab: Berita -->
+      <div class="tab-panel active" id="tabBerita">
+        <div class="field"><label for="newsTitle">Judul</label><input id="newsTitle" type="text" placeholder="Judul berita"></div>
+        <div class="field"><label for="newsContent">Isi</label><textarea id="newsContent" placeholder="Isi berita singkat"></textarea></div>
+        <button class="btn btn-primary" style="border:none; cursor:pointer;" onclick="addNews()">+ Tambah Berita</button>
+        <p class="admin-msg" id="newsMsg"></p>
+        <ul class="admin-item-list" id="newsAdminList"></ul>
+      </div>
+
+      <!-- Tab: Galeri -->
+      <div class="tab-panel" id="tabGaleri">
+        <div class="field"><label for="galFile">Pilih Foto (dari komputer/HP)</label><input id="galFile" type="file" accept="image/*"></div>
+        <div class="field"><label for="galCaption">Keterangan</label><input id="galCaption" type="text" placeholder="Nama kegiatan / keterangan foto"></div>
+        <button class="btn btn-primary" style="border:none; cursor:pointer;" id="galUploadBtn" onclick="addGallery()">+ Upload & Tambah Foto</button>
+        <p class="admin-msg" id="galMsg"></p>
+        <ul class="admin-item-list" id="galAdminList"></ul>
+      </div>
+
+      <!-- Tab: Pengurus -->
+      <div class="tab-panel" id="tabPengurus">
+        <div class="field"><label for="pgName">Nama</label><input id="pgName" type="text" placeholder="Nama pengurus"></div>
+        <div class="field"><label for="pgRole">Jabatan</label><input id="pgRole" type="text" placeholder="misal: Ketua Umum, Pembina, dll"></div>
+        <button class="btn btn-primary" style="border:none; cursor:pointer;" onclick="addPengurus()">+ Tambah Pengurus</button>
+        <p class="admin-msg" id="pgMsg"></p>
+        <ul class="admin-item-list" id="pgAdminList"></ul>
+      </div>
+
+      <!-- Tab: Komisi -->
+      <div class="tab-panel" id="tabKomisi">
+        <div class="field">
+          <label for="kmKomisi">Komisi / Badan Semi Otonom</label>
+          <select id="kmKomisi" style="width:100%; padding:13px 16px; border-radius:10px; border:1px solid var(--line); font-family:inherit; font-size:.92rem;">
+            <option value="A">Komisi A — Isu Keumatan</option>
+            <option value="B">Komisi B — Kaderisasi & Kelembagaan</option>
+            <option value="C">Komisi C — Kemuslimahan</option>
+            <option value="D">Komisi D — Humas & Media</option>
+            <option value="BAROKAH">Barokah Mart — Fundrising</option>
+            <option value="PEDULI">FSLDK Peduli — Kepedulian</option>
+          </select>
+        </div>
+        <div class="field"><label for="kmName">Nama Anggota</label><input id="kmName" type="text" placeholder="Nama anggota"></div>
+        <button class="btn btn-primary" style="border:none; cursor:pointer;" onclick="addKomisiAnggota()">+ Tambah Anggota</button>
+        <p class="admin-msg" id="kmMsg"></p>
+        <ul class="admin-item-list" id="kmAdminList"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // burger menu
+  const burger = document.getElementById('burger');
+  const navlinks = document.getElementById('navlinks');
+  burger.addEventListener('click', () => navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  revealEls.forEach(el => io.observe(el));
+
+  // ================= SUPABASE SETUP =================
+  const SUPABASE_URL = "https://jmuynzlglewquisdvlwi.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_jyhQ9A3oLYlvua9AIHOy8g_ocH8uAtW";
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: false }
+  });
+
+  const KOMISI_LABEL = {
+    A: "Komisi A — Isu Keumatan",
+    B: "Komisi B — Kaderisasi & Kelembagaan",
+    C: "Komisi C — Kemuslimahan",
+    D: "Komisi D — Humas & Media",
+    BAROKAH: "Barokah Mart — Fundrising",
+    PEDULI: "FSLDK Peduli — Kepedulian"
+  };
+
+  function escapeHtml(str){
+    return (str || "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  }
+  function fmtDate(d){
+    try{ return new Date(d).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}); }
+    catch(e){ return ""; }
+  }
+
+  // ---------- render publik ----------
+  async function loadNews(){
+    const el = document.getElementById('beritaGrid');
+    const { data, error } = await sb.from('news').select('*').order('created_at', {ascending:false}).limit(6);
+    if(error || !data || data.length === 0){
+      el.innerHTML = '<p class="empty-note">Belum ada berita. Admin bisa menambahkan lewat Mode Admin.</p>';
+      return;
+    }
+    el.innerHTML = data.map(n => `
+      <div class="berita-card reveal in">
+        <time>${fmtDate(n.created_at)}</time>
+        <h3>${escapeHtml(n.title)}</h3>
+        <p>${escapeHtml(n.content)}</p>
+      </div>
+    `).join('');
+  }
+
+  async function loadGallery(){
+    const el = document.getElementById('galeriDinamis');
+    const { data, error } = await sb.from('gallery').select('*').order('created_at', {ascending:false});
+    if(error || !data || data.length === 0){
+      el.innerHTML = '<p class="empty-note">Belum ada foto. Admin bisa menambahkan lewat Mode Admin.</p>';
+      return;
+    }
+    el.innerHTML = data.map(g => `
+      <div class="g-tile dyn reveal in">
+        <img src="${escapeHtml(g.image_url)}" alt="${escapeHtml(g.caption||'')}" loading="lazy">
+        <span style="z-index:3;">${escapeHtml(g.caption||'')}</span>
+      </div>
+    `).join('');
+  }
+
+  async function loadPengurus(){
+    const el = document.getElementById('pengurusList');
+    const { data, error } = await sb.from('pengurus').select('*').order('order_index', {ascending:true});
+    if(error || !data || data.length === 0){
+      el.innerHTML = '<div><span>Belum ada data pengurus.</span></div>';
+      return;
+    }
+    el.innerHTML = data.map(p => `<div><b>${escapeHtml(p.name)}</b><span>${escapeHtml(p.role)}</span></div>`).join('');
+  }
+
+  async function openKomisiModal(komisi, label){
+    document.getElementById('komisiTitle').textContent = label;
+    const list = document.getElementById('komisiMembers');
+    list.innerHTML = '<li>Memuat...</li>';
+    openModal('komisiModal');
+    const { data, error } = await sb.from('komisi_anggota').select('*').eq('komisi', komisi).order('order_index', {ascending:true});
+    if(error || !data || data.length === 0){
+      list.innerHTML = '<li>Belum ada anggota terdaftar untuk komisi ini.</li>';
+      return;
+    }
+    list.innerHTML = data.map(m => `<li>${escapeHtml(m.name)}</li>`).join('');
+  }
+
+  document.querySelectorAll('.komisi-btn').forEach(btn => {
+    btn.addEventListener('click', () => openKomisiModal(btn.dataset.komisi, btn.dataset.label));
+  });
+
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', (e) => { if(e.target === ov) ov.classList.remove('open'); });
+  });
+
+  loadNews();
+  loadGallery();
+  loadPengurus();
+
+  // ================= ADMIN AUTH =================
+  document.getElementById('adminFab').addEventListener('click', () => {
+    openModal('adminModal');
+  });
+
+  function showMsg(id, text, ok){
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'admin-msg show ' + (ok ? 'ok' : 'err');
+  }
+
+  async function doLogin(){
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPass').value;
+    if(!email || !password){ showMsg('loginMsg', 'Isi email dan password dulu.', false); return; }
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){ showMsg('loginMsg', 'Login gagal: ' + error.message, false); return; }
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('panelView').style.display = 'block';
+    refreshAdminLists();
+  }
+
+  async function doLogout(){
+    await sb.auth.signOut();
+    document.getElementById('panelView').style.display = 'none';
+    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPass').value = '';
+  }
+
+  function refreshAdminLists(){
+    loadNewsAdmin();
+    loadGalleryAdmin();
+    loadPengurusAdmin();
+    loadKomisiAdmin();
+  }
+
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ================= CRUD: BERITA =================
+  async function addNews(){
+    const title = document.getElementById('newsTitle').value.trim();
+    const content = document.getElementById('newsContent').value.trim();
+    if(!title || !content){ showMsg('newsMsg', 'Judul dan isi wajib diisi.', false); return; }
+    const { error } = await sb.from('news').insert({ title, content });
+    if(error){ showMsg('newsMsg', 'Gagal menambah: ' + error.message, false); return; }
+    document.getElementById('newsTitle').value = '';
+    document.getElementById('newsContent').value = '';
+    showMsg('newsMsg', 'Berita ditambahkan.', true);
+    loadNewsAdmin(); loadNews();
+  }
+  async function loadNewsAdmin(){
+    const { data } = await sb.from('news').select('*').order('created_at', {ascending:false});
+    const el = document.getElementById('newsAdminList');
+    el.innerHTML = (data||[]).map(n => `
+      <li><span class="txt"><b>${escapeHtml(n.title)}</b><small>${fmtDate(n.created_at)}</small></span>
+      <button class="del-btn" onclick="deleteNews('${n.id}')">Hapus</button></li>
+    `).join('') || '<li>Belum ada berita.</li>';
+  }
+  async function deleteNews(id){
+    await sb.from('news').delete().eq('id', id);
+    loadNewsAdmin(); loadNews();
+  }
+
+  // ================= CRUD: GALERI (upload file) =================
+  async function addGallery(){
+    const fileInput = document.getElementById('galFile');
+    const caption = document.getElementById('galCaption').value.trim();
+    const file = fileInput.files[0];
+    if(!file){ showMsg('galMsg', 'Pilih file foto dulu.', false); return; }
+
+    const btn = document.getElementById('galUploadBtn');
+    btn.disabled = true; btn.textContent = 'Mengunggah...';
+    showMsg('galMsg', 'Sedang mengunggah foto...', true);
+
+    const ext = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+    const { error: upErr } = await sb.storage.from('galeri').upload(fileName, file);
+    if(upErr){
+      showMsg('galMsg', 'Gagal mengunggah: ' + upErr.message, false);
+      btn.disabled = false; btn.textContent = '+ Upload & Tambah Foto';
+      return;
+    }
+
+    const { data: pub } = sb.storage.from('galeri').getPublicUrl(fileName);
+    const image_url = pub.publicUrl;
+
+    const { error } = await sb.from('gallery').insert({ image_url, caption });
+    btn.disabled = false; btn.textContent = '+ Upload & Tambah Foto';
+    if(error){ showMsg('galMsg', 'Gagal menyimpan data: ' + error.message, false); return; }
+
+    fileInput.value = '';
+    document.getElementById('galCaption').value = '';
+    showMsg('galMsg', 'Foto berhasil ditambahkan.', true);
+    loadGalleryAdmin(); loadGallery();
+  }
+  async function loadGalleryAdmin(){
+    const { data } = await sb.from('gallery').select('*').order('created_at', {ascending:false});
+    const el = document.getElementById('galAdminList');
+    el.innerHTML = (data||[]).map(g => `
+      <li><span class="txt"><b>${escapeHtml(g.caption||'(tanpa keterangan)')}</b><small>${escapeHtml(g.image_url)}</small></span>
+      <button class="del-btn" onclick="deleteGallery('${g.id}')">Hapus</button></li>
+    `).join('') || '<li>Belum ada foto.</li>';
+  }
+  async function deleteGallery(id){
+    await sb.from('gallery').delete().eq('id', id);
+    loadGalleryAdmin(); loadGallery();
+  }
+
+  // ================= CRUD: PENGURUS =================
+  async function addPengurus(){
+    const name = document.getElementById('pgName').value.trim();
+    const role = document.getElementById('pgRole').value.trim();
+    if(!name || !role){ showMsg('pgMsg', 'Nama dan jabatan wajib diisi.', false); return; }
+    const { error } = await sb.from('pengurus').insert({ name, role });
+    if(error){ showMsg('pgMsg', 'Gagal menambah: ' + error.message, false); return; }
+    document.getElementById('pgName').value = '';
+    document.getElementById('pgRole').value = '';
+    showMsg('pgMsg', 'Pengurus ditambahkan.', true);
+    loadPengurusAdmin(); loadPengurus();
+  }
+  async function loadPengurusAdmin(){
+    const { data } = await sb.from('pengurus').select('*').order('order_index', {ascending:true});
+    const el = document.getElementById('pgAdminList');
+    el.innerHTML = (data||[]).map(p => `
+      <li><span class="txt"><b>${escapeHtml(p.name)}</b><small>${escapeHtml(p.role)}</small></span>
+      <button class="del-btn" onclick="deletePengurus('${p.id}')">Hapus</button></li>
+    `).join('') || '<li>Belum ada pengurus.</li>';
+  }
+  async function deletePengurus(id){
+    await sb.from('pengurus').delete().eq('id', id);
+    loadPengurusAdmin(); loadPengurus();
+  }
+
+  // ================= CRUD: KOMISI ANGGOTA =================
+  async function addKomisiAnggota(){
+    const komisi = document.getElementById('kmKomisi').value;
+    const name = document.getElementById('kmName').value.trim();
+    if(!name){ showMsg('kmMsg', 'Nama anggota wajib diisi.', false); return; }
+    const { error } = await sb.from('komisi_anggota').insert({ komisi, name });
+    if(error){ showMsg('kmMsg', 'Gagal menambah: ' + error.message, false); return; }
+    document.getElementById('kmName').value = '';
+    showMsg('kmMsg', 'Anggota ditambahkan.', true);
+    loadKomisiAdmin();
+  }
+  async function loadKomisiAdmin(){
+    const { data } = await sb.from('komisi_anggota').select('*').order('komisi', {ascending:true}).order('order_index', {ascending:true});
+    const el = document.getElementById('kmAdminList');
+    el.innerHTML = (data||[]).map(m => `
+      <li><span class="txt"><b>${escapeHtml(m.name)}</b><small>${KOMISI_LABEL[m.komisi]||m.komisi}</small></span>
+      <button class="del-btn" onclick="deleteKomisiAnggota('${m.id}')">Hapus</button></li>
+    `).join('') || '<li>Belum ada anggota.</li>';
+  }
+  async function deleteKomisiAnggota(id){
+    await sb.from('komisi_anggota').delete().eq('id', id);
+    loadKomisiAdmin();
+  }
+</script>
+
+</body>
+</html>
